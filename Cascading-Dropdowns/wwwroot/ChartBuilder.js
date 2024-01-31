@@ -23,7 +23,7 @@ function AddListeners() {
         });
 
         document.addEventListener('change', function (e) {
-            
+
             if (e.target.classList.contains('calc-radio')) {
                 var curr_val = e.target.value;
                 if (

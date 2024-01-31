@@ -34,7 +34,7 @@ public partial class ChartBuilder
                 }
             };
         }
-        
+
         if (ctx.Filters == null)
         {
             ctx.Filters = new List<FilterDefinition>();

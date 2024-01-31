@@ -15,7 +15,7 @@ public class Program
             client.DefaultRequestHeaders.Add("x-api-token",
                 builder.Configuration["Aggregations:ApiToken"]);
         });
-        
+
         builder.Services.AddRazorComponents();
 
         var app = builder.Build();

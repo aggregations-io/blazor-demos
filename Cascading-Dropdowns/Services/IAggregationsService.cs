@@ -8,8 +8,6 @@ public interface IAggregationsService
     public IAsyncEnumerable<FilterDefinition?> GetFilters();
 }
 
-
-
 public class AggregationsService(HttpClient client) : IAggregationsService
 {
     public async IAsyncEnumerable<AggregationsResult> GetResults(AggregationsRequest request)
@@ -18,7 +16,7 @@ public class AggregationsService(HttpClient client) : IAggregationsService
             .PostAsJsonAsync("metrics/results", request);
 
         resp.EnsureSuccessStatusCode();
-        
+
         await foreach (var r in resp.Content.ReadFromJsonAsAsyncEnumerable<AggregationsResult>())
         {
             yield return r;

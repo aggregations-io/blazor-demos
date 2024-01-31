@@ -95,23 +95,23 @@
                 </div>
                 <div class="col-xl-6">
                     <label class="form-label" for="StartTimeDt">Start Time</label>
-                    <input type="datetime-local" 
-                           value="@(ctx.CurrentRequest.startTime.ToString("yyyy-MM-ddTHH:mm"))" 
-                           id="StartTimeDt" 
-                           disabled="@results_loading" 
-                           class="form-control" 
+                    <input type="datetime-local"
+                           value="@(ctx.CurrentRequest.startTime.ToString("yyyy-MM-ddTHH:mm"))"
+                           id="StartTimeDt"
+                           disabled="@results_loading"
+                           class="form-control"
                            data-change_type="@FilterSetupContext.SubmitType.Dates"
                            name="@($"{nameof(ctx)}.{nameof(ctx.CurrentRequest)}.{nameof(ctx.CurrentRequest.startTime)}")"/>
                 </div>
                 <div class="col-xl-6">
                     <label class="form-label" for="EndTimeDt">End Time</label>
-                    <input type="datetime-local" 
-                                               value="@(ctx.CurrentRequest.endTime.ToString("yyyy-MM-ddTHH:mm"))" 
-                                               id="EndTimeDt" 
-                                               disabled="@results_loading" 
-                                               class="form-control" 
-                                               data-change_type="@FilterSetupContext.SubmitType.Dates"
-                                               name="@($"{nameof(ctx)}.{nameof(ctx.CurrentRequest)}.{nameof(ctx.CurrentRequest.endTime)}")"/>
+                    <input type="datetime-local"
+                           value="@(ctx.CurrentRequest.endTime.ToString("yyyy-MM-ddTHH:mm"))"
+                           id="EndTimeDt"
+                           disabled="@results_loading"
+                           class="form-control"
+                           data-change_type="@FilterSetupContext.SubmitType.Dates"
+                           name="@($"{nameof(ctx)}.{nameof(ctx.CurrentRequest)}.{nameof(ctx.CurrentRequest.endTime)}")"/>
                 </div>
                 <div class="col-12">
 
