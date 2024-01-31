@@ -71,10 +71,12 @@ public partial class ChartBuilder
 
     private async Task FormSubmitted(EditContext obj)
     {
-        if (ctx!=null && ctx.Type == FilterSetupContext.SubmitType.GoBtn && ctx.Submittable)
+        ArgumentNullException.ThrowIfNull(ctx);
+        
+        if (ctx.Type == FilterSetupContext.SubmitType.GoBtn && ctx.Submittable)
         {
             results_loading = true;
-            await Task.Delay(5);
+            
             results = new List<AggregationsResult>();
 
             var res = _svc.GetResults(ctx.CurrentRequest);
