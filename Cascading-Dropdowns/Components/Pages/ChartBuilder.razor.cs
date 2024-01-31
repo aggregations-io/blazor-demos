@@ -71,8 +71,7 @@ public partial class ChartBuilder
 
     private async Task FormSubmitted(EditContext obj)
     {
-        await CleanupCtx();
-        if (ctx.Type == FilterSetupContext.SubmitType.GoBtn && ctx.Submittable)
+        if (ctx!=null && ctx.Type == FilterSetupContext.SubmitType.GoBtn && ctx.Submittable)
         {
             results_loading = true;
             await Task.Delay(5);
