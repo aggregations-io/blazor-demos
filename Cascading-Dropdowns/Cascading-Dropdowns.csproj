@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <AssemblyName>Cascading_Dropdowns</AssemblyName>
+        <RootNamespace>Cascading_Dropdowns</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+
+    </ItemGroup>
+
+</Project>

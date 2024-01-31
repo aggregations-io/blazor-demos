@@ -1,0 +1,153 @@
+@page "/"
+@using Cascading_Dropdowns.Services
+@attribute [StreamRendering]
+@inject IAggregationsService _svc
+
+
+<div class="row g-5">
+    <div class="col-4">
+        <EditForm class="row g-3" Enhance="true" FormName="charts" Model="ctx" OnSubmit="@FormSubmitted" id="chartsForm">
+
+            <input type="hidden" id="submitType" @bind-value="ctx.Type" name="@($"{nameof(ctx)}.{nameof(ctx.Type)}")"/>
+
+            @if (ctx.Filters != null)
+            {
+                <div class="col-xl-6">
+                    <label class="form-label" for="filterSelector">Filter: </label>
+
+                    <InputSelect
+                        disabled="@results_loading"
+                        class="form-control form-select"
+                        TValue="string"
+                        @bind-Value="ctx.CurrentRequest.filterId"
+                        Id="filterSelector"
+                        data-change_type="@FilterSetupContext.SubmitType.Filter">
+                        @if (ctx.SelectedFilter == null)
+                        {
+                            <option value="@string.Empty">Select a Filter</option>
+                        }
+                        @foreach (var f in ctx.Filters)
+                        {
+                            <option value="@f.id" selected="@(ctx.CurrentRequest.filterId == f.id)">@f.name</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div class="col-xl-6">
+                    <label class="form-label" for="aggregationSelector">Aggregation</label>
+                    <InputSelect
+                        disabled="@(results_loading || ctx.SelectedFilter == null)"
+                        class="form-control form-select"
+                        @bind-Value="@ctx.CurrentRequest.aggregationId"
+                        TValue="int"
+                        Id="aggregationSelector"
+                        data-change_type="@FilterSetupContext.SubmitType.Aggregation">
+                        @if (ctx.SelectedFilter != null)
+                        {
+                            @foreach (var a in ctx.SelectedFilter.aggregations)
+                            {
+                                <option value="@a.id">@a.name</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+
+
+                <div class="col-12">
+                    @if (ctx.SelectedAggregation?.calculations != null && ctx.SelectedAggregation.calculations.Contains(ctx.CurrentRequest.calculation))
+                    {
+                        <label class="form-label">Calculation</label>
+                        <InputRadioGroup
+                            class="form-check"
+                            TValue="CalculationType"
+                            @bind-Value="ctx.CurrentRequest.calculation">
+                            @foreach (var o in ctx.SelectedAggregation.calculations)
+                            {
+                                <div class="col-12">
+                                    <InputRadio
+                                        @key="@o"
+                                        disabled="@results_loading"
+                                        TValue="CalculationType"
+                                        Value="@o"
+                                        data-change_type="@FilterSetupContext.SubmitType.Calculation"
+                                        class="form-check-input calc-radio"
+                                        id="@($"radio{o}")"/>
+
+                                    <label for="@($"radio{o}")" class="form-check-label">
+                                        <code class="fw-bold">@o</code>
+                                    </label>
+                                </div>
+                            }
+                        </InputRadioGroup>
+                    }
+                </div>
+
+                <div class="col-12 @(ctx.CurrentRequest.calculation == CalculationType.PERCENTILES ? "" : "d-none")">
+                    <label class="form-label">Percentile</label>
+                    <input
+                        disabled="@results_loading"
+                        type="number"
+                        min="0"
+                        max="1"
+                        step="0.05"
+                        @bind-value="ctx.PercentileStr"
+                        class="form-control"
+                        name="@($"{nameof(ctx)}.{nameof(ctx.PercentileStr)}")"/>
+                </div>
+                <div class="col-xl-6">
+                    <label class="form-label" for="StartTimeDt">Start Time</label>
+                    <input type="datetime-local" 
+                           value="@(ctx.CurrentRequest.startTime.ToString("yyyy-MM-ddTHH:mm"))" 
+                           id="StartTimeDt" 
+                           disabled="@results_loading" 
+                           class="form-control" 
+                           data-change_type="@FilterSetupContext.SubmitType.Dates"
+                           name="@($"{nameof(ctx)}.{nameof(ctx.CurrentRequest)}.{nameof(ctx.CurrentRequest.startTime)}")"/>
+                </div>
+                <div class="col-xl-6">
+                    <label class="form-label" for="EndTimeDt">End Time</label>
+                    <input type="datetime-local" 
+                                               value="@(ctx.CurrentRequest.endTime.ToString("yyyy-MM-ddTHH:mm"))" 
+                                               id="EndTimeDt" 
+                                               disabled="@results_loading" 
+                                               class="form-control" 
+                                               data-change_type="@FilterSetupContext.SubmitType.Dates"
+                                               name="@($"{nameof(ctx)}.{nameof(ctx.CurrentRequest)}.{nameof(ctx.CurrentRequest.endTime)}")"/>
+                </div>
+                <div class="col-12">
+
+                    @* Button for clicking *@
+                    <button
+                        disabled="@(results_loading || !ctx.Submittable)"
+                        class="btn btn-success"
+                        id="goBtn"
+                        type="button"
+                        data-change_type="@FilterSetupContext.SubmitType.GoBtn">
+                        Go
+                    </button>
+
+                    @* Button for submitting *@
+                    <button class="btn btn-success d-none" id="submitBtn" type="submit"></button>
+                </div>
+            }
+        </EditForm>
+    </div>
+    <div class="col-8">
+        @if (results_loading)
+        {
+            <h1>Loading...</h1>
+        }
+        else if (results != null)
+        {
+            <div id="resultsOuter">
+
+            </div>
+        }
+        else if (!results_loading)
+        {
+            <h3>Make some selections</h3>
+        }
+    </div>
+</div>
+<SectionContent SectionName="Scripts">
+    <script type="text/javascript" src="/ChartBuilder.js"></script>
+</SectionContent>
