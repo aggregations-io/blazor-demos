@@ -9,15 +9,13 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddHttpClient(AggregationsService.HTTP_CLIENT_NAME, f =>
+        builder.Services.AddHttpClient<IAggregationsService, AggregationsService>(client =>
         {
-            f.BaseAddress = new Uri("https://app.aggregations.io/api/v1/");
-            f.DefaultRequestHeaders.Add("x-api-token",
+            client.BaseAddress = new Uri("https://app.aggregations.io/api/v1/");
+            client.DefaultRequestHeaders.Add("x-api-token",
                 builder.Configuration["Aggregations:ApiToken"]);
         });
-
-        builder.Services.AddSingleton<IAggregationsService, AggregationsService>();
-
+        
         builder.Services.AddRazorComponents();
 
         var app = builder.Build();

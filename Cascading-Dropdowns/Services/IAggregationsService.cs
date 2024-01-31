@@ -8,17 +8,17 @@ public interface IAggregationsService
     public IAsyncEnumerable<FilterDefinition?> GetFilters();
 }
 
-public class AggregationsService(IHttpClientFactory factory) : IAggregationsService
-{
-    public const string HTTP_CLIENT_NAME = "AggregationsClient";
 
+
+public class AggregationsService(HttpClient client) : IAggregationsService
+{
     public async IAsyncEnumerable<AggregationsResult> GetResults(AggregationsRequest request)
     {
-        var resp = await factory.CreateClient(HTTP_CLIENT_NAME)
+        var resp = await client
             .PostAsJsonAsync("metrics/results", request);
 
         resp.EnsureSuccessStatusCode();
-
+        
         await foreach (var r in resp.Content.ReadFromJsonAsAsyncEnumerable<AggregationsResult>())
         {
             yield return r;
@@ -26,7 +26,6 @@ public class AggregationsService(IHttpClientFactory factory) : IAggregationsServ
     }
 
     public IAsyncEnumerable<FilterDefinition?> GetFilters() =>
-        factory
-            .CreateClient(HTTP_CLIENT_NAME)
+        client
             .GetFromJsonAsAsyncEnumerable<FilterDefinition>("filter-definitions");
 }
