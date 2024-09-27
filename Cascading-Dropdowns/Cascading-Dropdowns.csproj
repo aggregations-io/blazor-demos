@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-
+      <PackageReference Include="Highsoft.Highcharts" Version="11.4.6.4" />
     </ItemGroup>
 
 </Project>

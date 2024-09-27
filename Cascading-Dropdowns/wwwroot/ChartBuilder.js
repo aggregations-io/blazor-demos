@@ -12,6 +12,10 @@ Blazor.addEventListener('enhancedload', function () {
     if (radioChecked !== null) {
         radioChecked.checked = true;
     }
+    
+    if(document.getElementById('chart')){
+        createChartchart();
+    }
 });
 
 function AddListeners() {
