@@ -13,25 +13,30 @@ public partial class HighchartsContainer : ComponentBase
 
     protected override void OnInitialized()
     {
-        var grouped_data = Results.GroupBy(x =>
+        var groupedData = Results.GroupBy(aggResult =>
         {
-            if (x.groupings != null)
+            if (aggResult.groupings != null)
             {
-                return string.Join(", ", x.groupings.OrderBy(z => z.Key).Select(y => $"{y.Key} = {y.Value}"));
+                var humanReadable = aggResult
+                    .groupings
+                    .OrderBy(Grouping => Grouping.Key)
+                    .ThenBy(Grouping=> Grouping.Value)
+                    .Select(Grouping => $"{Grouping.Key} = {Grouping.Value}");
+                return string.Join(", ",humanReadable );
             }
-            else
-            {
-                return string.Empty;
-            }
+            return string.Empty;
         });
+        
         var serieses = new List<Series>();
-        foreach (var g in grouped_data)
+        foreach (var grouping in groupedData)
         {
             serieses.Add(new LineSeries()
             {
-                Name = g.Key, Data = g.Select(d => new LineSeriesData()
+                Name = grouping.Key,
+                Data = grouping.Select(aggResult => new LineSeriesData()
                 {
-                    Y = d.value, X = new DateTimeOffset(d.dt).ToUnixTimeMilliseconds()
+                    Y = aggResult.value,
+                    X = new DateTimeOffset(aggResult.dt).ToUnixTimeMilliseconds()
                 }).ToList()
             });
         }
@@ -97,6 +102,7 @@ public partial class HighchartsContainer : ComponentBase
             };
 
         chartOptions.ID = "chart";
+        
         renderer = new HighchartsRenderer(chartOptions);
     }
 }
