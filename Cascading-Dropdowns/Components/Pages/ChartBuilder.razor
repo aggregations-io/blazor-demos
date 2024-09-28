@@ -138,9 +138,7 @@
         }
         else if (results != null)
         {
-            <div id="resultsOuter">
-                <b>Got @results.Count Results</b>
-            </div>
+            <HighchartsContainer ctx="ctx" Results="results" />
         }
         else if (!results_loading)
         {
